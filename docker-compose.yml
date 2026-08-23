@@ -1,0 +1,130 @@
+version: "3.8"
+
+services:
+  # ----------------------------------------------------------------------------
+  # Base service: Test Suite Runner
+  # ----------------------------------------------------------------------------
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: agent-memory-benchmark:latest
+    container_name: agent-memory-test
+    entrypoint: ["pytest"]
+    command: ["tests/", "-v"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - RESULTS_DIR=/app/results
+    volumes:
+      - ./results:/app/results
+    env_file:
+      - path: .env
+        required: false
+
+  # ----------------------------------------------------------------------------
+  # Full Reproduction Runner (Protocol dispatch via CLI args)
+  # ----------------------------------------------------------------------------
+  reproduction:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: agent-memory-benchmark:latest
+    container_name: agent-memory-reproduction
+    entrypoint: ["python", "scripts/run_reproduction.py"]
+    command: ["--protocol", "all", "--steps", "1000"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - MODEL_BACKBONE=${MODEL_BACKBONE:-gpt-4o-mini}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - RESULTS_DIR=/app/results
+    volumes:
+      - ./results:/app/results
+    env_file:
+      - path: .env
+        required: false
+
+  # ----------------------------------------------------------------------------
+  # Protocol A: Long-Term Memory Growth & Experience-Following Dynamics
+  # ----------------------------------------------------------------------------
+  protocol-a:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: agent-memory-benchmark:latest
+    container_name: agent-memory-protocol-a
+    entrypoint: ["python", "scripts/run_reproduction.py"]
+    command: ["--protocol", "A", "--env", "reg_agent", "--steps", "1000"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - RESULTS_DIR=/app/results
+    volumes:
+      - ./results:/app/results
+    env_file:
+      - path: .env
+        required: false
+
+  # ----------------------------------------------------------------------------
+  # Protocol B: Memory Deletion & KDE Utility Separation
+  # ----------------------------------------------------------------------------
+  protocol-b:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: agent-memory-benchmark:latest
+    container_name: agent-memory-protocol-b
+    entrypoint: ["python", "scripts/run_reproduction.py"]
+    command: ["--protocol", "B", "--env", "reg_agent", "--steps", "1000"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - RESULTS_DIR=/app/results
+    volumes:
+      - ./results:/app/results
+    env_file:
+      - path: .env
+        required: false
+
+  # ----------------------------------------------------------------------------
+  # Protocol C: Task Distribution Shift Adaptation (GMM Clusters)
+  # ----------------------------------------------------------------------------
+  protocol-c:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: agent-memory-benchmark:latest
+    container_name: agent-memory-protocol-c
+    entrypoint: ["python", "scripts/run_reproduction.py"]
+    command: ["--protocol", "C", "--env", "reg_agent", "--steps", "1000"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - RESULTS_DIR=/app/results
+    volumes:
+      - ./results:/app/results
+    env_file:
+      - path: .env
+        required: false
+
+  # ----------------------------------------------------------------------------
+  # Protocol D: Resource-Constrained Bounded Memory
+  # ----------------------------------------------------------------------------
+  protocol-d:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: agent-memory-benchmark:latest
+    container_name: agent-memory-protocol-d
+    entrypoint: ["python", "scripts/run_reproduction.py"]
+    command: ["--protocol", "D", "--env", "reg_agent", "--steps", "1000", "--capacity", "100"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - RESULTS_DIR=/app/results
+    volumes:
+      - ./results:/app/results
+    env_file:
+      - path: .env
+        required: false
