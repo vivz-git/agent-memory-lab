@@ -1,0 +1,457 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Agent Memory Lab — interactive demo of episodic memory lifecycle and management research" />
+  <title>Agent Memory Lab · Experience Lifecycle Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <div class="header-inner">
+    <div class="header-brand">
+      <span class="brand-mark" aria-hidden="true">&#9672;</span>
+      <div class="brand-text">
+        <span class="brand-name">Agent Memory Lab</span>
+        <span class="brand-tagline">Experience Lifecycle &amp; Memory Management</span>
+      </div>
+    </div>
+    <nav class="header-nav" role="navigation" aria-label="Primary navigation">
+      <button class="nav-tab active" data-panel="run" aria-selected="true" role="tab">
+        <span class="nav-icon" aria-hidden="true">&#11041;</span> Run
+      </button>
+      <button class="nav-tab" data-panel="memory" aria-selected="false" role="tab">
+        <span class="nav-icon" aria-hidden="true">&#9998;</span> Memory
+      </button>
+      <button class="nav-tab" data-panel="metrics" aria-selected="false" role="tab">
+        <span class="nav-icon" aria-hidden="true">&#9651;</span> Metrics
+      </button>
+    </nav>
+    <div class="header-controls">
+      <button class="btn-icon" id="theme-toggle" aria-label="Toggle colour scheme" title="Toggle colour scheme">
+        <span aria-hidden="true" id="theme-icon">&#9681;</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="main-layout" id="main-content">
+
+  <!-- PANEL 1: RUN -->
+  <section class="panel active" id="panel-run" role="tabpanel" aria-label="Run agent task">
+    <div class="panel-grid">
+
+      <div class="col-left">
+        <div class="card" id="card-task">
+          <header class="card-header">
+            <h2 class="card-title">Task Input</h2>
+            <div class="config-row">
+              <label class="field-label" for="env-select">Environment</label>
+              <select id="env-select" class="select-input">
+                <option value="regagent">RegAgent (6D Synthetic)</option>
+                <option value="ciciot">CIC-IoT (Network Traffic)</option>
+              </select>
+            </div>
+          </header>
+          <div class="task-body">
+            <div class="field-group">
+              <label class="field-label" for="query-input">Query / Task Vector</label>
+              <textarea id="query-input" class="code-input" rows="3" placeholder="[0.42, -1.17, 0.88, 0.33, -0.61, 1.04]" spellcheck="false" aria-describedby="query-hint"></textarea>
+              <span class="field-hint" id="query-hint">6-dimensional feature vector for RegAgent; natural language for CIC-IoT</span>
+            </div>
+            <div class="policy-grid">
+              <div class="field-group">
+                <label class="field-label" for="add-policy">Addition Policy &#960;(q,e)</label>
+                <select id="add-policy" class="select-input">
+                  <option value="fixed">Fixed &#960;=0</option>
+                  <option value="add_all">Add-All &#960;=1</option>
+                  <option value="coarse" selected>Coarse (LLM Judge)</option>
+                  <option value="strict">Strict (Oracle)</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="del-policy">Deletion Policy &#966;(q,e,t)</label>
+                <select id="del-policy" class="select-input">
+                  <option value="none">None</option>
+                  <option value="periodic">Periodic &#966;_per</option>
+                  <option value="history" selected>History-Based &#966;_hist</option>
+                  <option value="combined">Combined</option>
+                </select>
+              </div>
+            </div>
+            <div class="toggle-row">
+              <div class="toggle-label">
+                <span class="toggle-title">Adaptive Read Rejection</span>
+                <span class="toggle-detail">System-1 Read Filter &mdash; Extension &sect;13</span>
+              </div>
+              <button id="adaptive-toggle" class="toggle-switch" role="switch" aria-checked="true" aria-label="Enable adaptive read rejection">
+                <span class="toggle-thumb" aria-hidden="true"></span>
+              </button>
+            </div>
+            <button class="btn-primary" id="run-btn" aria-busy="false">
+              <span class="btn-label">Execute Episode</span>
+              <span class="btn-spinner" aria-hidden="true" hidden></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card card-compact" id="card-presets">
+          <header class="card-header">
+            <h2 class="card-title">Demo States</h2>
+            <span class="badge badge-muted">Mock Data</span>
+          </header>
+          <div class="preset-grid">
+            <button class="preset-btn" data-preset="add" aria-label="Load ADD state">
+              <span class="preset-icon decision-add" aria-hidden="true">&#8853;</span>
+              <span>ADD</span>
+            </button>
+            <button class="preset-btn" data-preset="retain" aria-label="Load RETAIN state">
+              <span class="preset-icon decision-retain" aria-hidden="true">&#9677;</span>
+              <span>RETAIN</span>
+            </button>
+            <button class="preset-btn" data-preset="delete" aria-label="Load DELETE state">
+              <span class="preset-icon decision-delete" aria-hidden="true">&#8854;</span>
+              <span>DELETE</span>
+            </button>
+            <button class="preset-btn" data-preset="reject" aria-label="Load REJECT state">
+              <span class="preset-icon decision-reject" aria-hidden="true">&#8856;</span>
+              <span>REJECT</span>
+            </button>
+            <button class="preset-btn" data-preset="error" aria-label="Load error state">
+              <span class="preset-icon" style="color:var(--error)" aria-hidden="true">&#9888;</span>
+              <span>Error</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-right">
+        <div class="card" id="card-result">
+          <header class="card-header">
+            <h2 class="card-title">Agent Result</h2>
+            <span class="status-badge" id="result-status" aria-live="polite">&#8212;</span>
+          </header>
+          <div id="result-body" class="result-body">
+            <div class="empty-state" id="result-empty">
+              <span class="empty-icon" aria-hidden="true">&#9678;</span>
+              <p>Execute a task to see the agent trajectory and output.</p>
+            </div>
+            <div id="result-data" hidden>
+              <div class="result-grid">
+                <div class="result-metric">
+                  <span class="metric-label">Prediction</span>
+                  <span class="metric-value mono" id="r-prediction">&#8212;</span>
+                </div>
+                <div class="result-metric">
+                  <span class="metric-label">Ground Truth</span>
+                  <span class="metric-value mono" id="r-ground-truth">&#8212;</span>
+                </div>
+                <div class="result-metric">
+                  <span class="metric-label">Score &#934;</span>
+                  <span class="metric-value mono" id="r-score">&#8212;</span>
+                </div>
+                <div class="result-metric">
+                  <span class="metric-label">L2 Error</span>
+                  <span class="metric-value mono" id="r-error">&#8212;</span>
+                </div>
+              </div>
+              <div class="trajectory-section">
+                <span class="section-label">Trajectory</span>
+                <pre class="trajectory-pre" id="r-trajectory" aria-label="Agent trajectory output"></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="card-retrieved">
+          <header class="card-header">
+            <h2 class="card-title">Retrieved Experiences</h2>
+            <span class="badge" id="retrieved-count" aria-live="polite">&#8212;</span>
+          </header>
+          <div id="retrieved-list" role="list" aria-label="Retrieved memory records">
+            <div class="empty-state">
+              <span class="empty-icon" aria-hidden="true">&#9672;</span>
+              <p>Retrieved memory records appear here after execution.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="card-decision">
+          <header class="card-header">
+            <h2 class="card-title">Memory Decision</h2>
+          </header>
+          <div id="decision-body">
+            <div class="empty-state" id="decision-empty">
+              <span class="empty-icon" aria-hidden="true">&#11041;</span>
+              <p>Addition and deletion decisions appear after execution.</p>
+            </div>
+            <div id="decision-data" hidden>
+              <div class="decision-gate" id="decision-gate-add">
+                <div class="gate-header">
+                  <span class="gate-name">Addition Gate &#960;(q,e)</span>
+                  <span class="gate-badge" id="gate-add-badge">&#8212;</span>
+                </div>
+                <div class="gate-detail" id="gate-add-detail">&#8212;</div>
+              </div>
+              <div class="decision-gate" id="decision-gate-del">
+                <div class="gate-header">
+                  <span class="gate-name">Deletion Gate &#966;(q,e,t)</span>
+                  <span class="gate-badge" id="gate-del-badge">&#8212;</span>
+                </div>
+                <div class="gate-detail" id="gate-del-detail">&#8212;</div>
+              </div>
+              <div class="utility-section">
+                <span class="section-label">Utility Score <em>&#934;(q,e)</em></span>
+                <div class="utility-bar-wrap">
+                  <div class="utility-bar" role="progressbar" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0" aria-label="Utility score">
+                    <div class="utility-fill" id="utility-fill" style="width:0%"></div>
+                  </div>
+                  <span class="utility-value mono" id="utility-value">&#8212;</span>
+                </div>
+                <div class="utility-meta">
+                  <span>Retrievals: <strong id="u-retrieval-count">&#8212;</strong></span>
+                  <span>Mean &#934;: <strong id="u-mean-utility">&#8212;</strong></span>
+                  <span>Entry step: <strong id="u-entry-step">&#8212;</strong></span>
+                </div>
+              </div>
+              <div class="rejection-section" id="rejection-section" hidden>
+                <div class="rejection-banner" role="alert">
+                  <span class="rejection-icon" aria-hidden="true">&#8856;</span>
+                  <div>
+                    <strong>Adaptive Read Rejection Active</strong>
+                    <p id="rejection-detail">Record mean utility below adaptive threshold &#8212; rejected before entering LLM prompt context.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PANEL 2: MEMORY -->
+  <section class="panel" id="panel-memory" role="tabpanel" aria-label="Memory bank" hidden>
+    <div class="panel-header">
+      <h2 class="panel-h2">Memory Bank</h2>
+      <div class="panel-meta" aria-live="polite">
+        <span>Records: <strong id="bank-size">142</strong></span>
+        <span>Capacity: <strong>&#8734;</strong></span>
+        <span>Step: <strong id="current-step">247</strong></span>
+      </div>
+    </div>
+
+    <div class="card" id="card-timeline">
+      <header class="card-header">
+        <h2 class="card-title">Memory Activity Timeline</h2>
+        <span class="badge badge-muted">Last 30 steps</span>
+      </header>
+      <div class="timeline-wrap" role="img" aria-label="Memory lifecycle timeline showing ADD, RETAIN, DELETE, REJECT events">
+        <canvas id="timeline-canvas" aria-hidden="true"></canvas>
+      </div>
+      <div class="timeline-legend">
+        <span class="legend-item"><span class="legend-dot decision-add" aria-hidden="true"></span>Added</span>
+        <span class="legend-item"><span class="legend-dot decision-retain" aria-hidden="true"></span>Retained</span>
+        <span class="legend-item"><span class="legend-dot decision-delete" aria-hidden="true"></span>Deleted</span>
+        <span class="legend-item"><span class="legend-dot decision-reject" aria-hidden="true"></span>Rejected</span>
+      </div>
+    </div>
+
+    <div class="card" id="card-bank-table">
+      <header class="card-header">
+        <h2 class="card-title">Experience Records</h2>
+        <div class="table-controls">
+          <label class="sr-only" for="bank-filter">Filter records</label>
+          <select id="bank-filter" class="select-input select-sm">
+            <option value="all">All records</option>
+            <option value="high-utility">High utility (&gt; 0.7)</option>
+            <option value="low-utility">Low utility (&lt; 0.3)</option>
+            <option value="at-risk">At-risk (candidate for deletion)</option>
+          </select>
+        </div>
+      </header>
+      <div class="table-wrap" role="region" aria-label="Memory experience records" tabindex="0">
+        <table class="mem-table" id="memory-table">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Entry Step</th>
+              <th scope="col">Retrievals</th>
+              <th scope="col">Mean Utility &#934;</th>
+              <th scope="col">Status</th>
+              <th scope="col">Query (truncated)</th>
+            </tr>
+          </thead>
+          <tbody id="memory-table-body">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PANEL 3: METRICS -->
+  <section class="panel" id="panel-metrics" role="tabpanel" aria-label="Experiment metrics" hidden>
+    <div class="panel-header">
+      <h2 class="panel-h2">Experiment Metrics</h2>
+      <div class="panel-meta">
+        <span>Baseline comparison &mdash; 4 strategies &mdash; 5 seeds</span>
+      </div>
+    </div>
+
+    <div class="kpi-strip" role="region" aria-label="Key performance indicators">
+      <div class="kpi-card">
+        <span class="kpi-label">Task Success Rate</span>
+        <span class="kpi-value">76.1%</span>
+        <span class="kpi-delta positive">+11.8pp vs Add-All</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">r_EF (Pearson)</span>
+        <span class="kpi-value">0.81</span>
+        <span class="kpi-delta neutral">Experience-Following</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Memory Size</span>
+        <span class="kpi-value">142</span>
+        <span class="kpi-delta neutral">records (bounded)</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">&#916;_EP Gap</span>
+        <span class="kpi-value">0.12</span>
+        <span class="kpi-delta positive">&#8722;0.11 with Read Reject</span>
+      </div>
+    </div>
+
+    <div class="chart-row">
+      <div class="card card-chart">
+        <header class="card-header">
+          <h2 class="card-title">Task Success Rate over Stream</h2>
+          <span class="badge badge-muted">T=500 steps</span>
+        </header>
+        <div class="chart-wrap" role="img" aria-label="Success rate line chart">
+          <canvas id="sr-chart" aria-hidden="true"></canvas>
+        <table class="sr-only" aria-label="Success rate data table">
+          <caption>Task Success Rate across strategies over 500 steps (sampled)</caption>
+          <thead><tr><th>Step</th><th>Fixed</th><th>Add-All</th><th>Strict+History</th><th>+Read Reject</th></tr></thead>
+          <tbody><tr><td>100</td><td>~63%</td><td>~62%</td><td>~66%</td><td>~67%</td></tr>
+          <tr><td>300</td><td>~64%</td><td>~55%</td><td>~70%</td><td>~72%</td></tr>
+          <tr><td>500</td><td>~64%</td><td>~52%</td><td>~72%</td><td>~76%</td></tr></tbody>
+        </table>
+        </div>
+        <div class="chart-legend" id="sr-legend" role="list" aria-label="Chart legend"></div>
+      </div>
+
+      <div class="card card-chart">
+        <header class="card-header">
+          <h2 class="card-title">Memory Size Growth</h2>
+          <span class="badge badge-muted">T=500 steps</span>
+        </header>
+        <div class="chart-wrap" role="img" aria-label="Memory size line chart">
+          <canvas id="mem-chart" aria-hidden="true"></canvas>
+        </div>
+        <div class="chart-legend" id="mem-legend" role="list" aria-label="Chart legend"></div>
+      </div>
+    </div>
+
+    <div class="card" id="card-ep-chart">
+      <header class="card-header">
+        <h2 class="card-title">Error Propagation Gap &#8212; History Deletion vs. + Adaptive Read Rejection</h2>
+        <span class="badge badge-accent">Extension &sect;13</span>
+      </header>
+      <div class="chart-wrap chart-wide" role="img" aria-label="Error propagation gap comparison chart">
+        <canvas id="ep-chart" aria-hidden="true"></canvas>
+        <table class="sr-only" aria-label="Error propagation gap data table">
+          <caption>Error Propagation Gap comparing History Deletion vs Adaptive Read Rejection strategies</caption>
+          <thead><tr><th>Step</th><th>History Deletion</th><th>+ Read Rejection</th></tr></thead>
+          <tbody><tr><td>50</td><td>0.32</td><td>0.17</td></tr>
+          <tr><td>200</td><td>0.18</td><td>0.09</td></tr>
+          <tr><td>500</td><td>0.08</td><td>0.04</td></tr></tbody>
+        </table>
+      </div>
+      <p class="chart-caption">
+        Adaptive Read Rejection dampens the &#916;_EP spike before the history-deletion threshold <em>n</em> is reached,
+        reducing toxic context pollution while the memory bank self-heals via utility-based eviction.
+      </p>
+    </div>
+
+    <div class="card" id="card-baselines">
+      <header class="card-header">
+        <h2 class="card-title">Baseline Strategy Comparison</h2>
+        <span class="badge badge-muted">RegAgent &middot; 5 seeds &middot; T=500</span>
+      </header>
+      <div class="table-wrap" role="region" aria-label="Baseline comparison table" tabindex="0">
+        <table class="baseline-table">
+          <thead>
+            <tr>
+              <th scope="col">Strategy</th>
+              <th scope="col">Addition &#960;</th>
+              <th scope="col">Deletion &#966;</th>
+              <th scope="col">Read Filter</th>
+              <th scope="col">Final SR &#8593;</th>
+              <th scope="col">Mem Size</th>
+              <th scope="col">r_EF</th>
+              <th scope="col">&#916;_EP &#8595;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="strategy-label">Fixed (No-Memory Baseline)</span></td>
+              <td class="mono">&#960;=0</td><td class="mono">&#8212;</td><td>&#8212;</td>
+              <td class="mono"><span class="sr-chip neutral">64.3%</span></td>
+              <td class="mono">100</td><td class="mono">0.12</td><td class="mono">&#8212;</td>
+            </tr>
+            <tr>
+              <td><span class="strategy-label">Add-All (Error Propagation)</span></td>
+              <td class="mono">&#960;=1</td><td class="mono">&#966;=0</td><td>&#8212;</td>
+              <td class="mono"><span class="sr-chip negative">51.7%</span></td>
+              <td class="mono">600+</td><td class="mono">0.93</td><td class="mono">0.41</td>
+            </tr>
+            <tr>
+              <td><span class="strategy-label">Coarse Addition Only</span></td>
+              <td class="mono">Coarse</td><td class="mono">&#966;=0</td><td>&#8212;</td>
+              <td class="mono"><span class="sr-chip neutral">68.9%</span></td>
+              <td class="mono">312</td><td class="mono">0.74</td><td class="mono">0.28</td>
+            </tr>
+            <tr>
+              <td><span class="strategy-label">Strict + History Deletion</span></td>
+              <td class="mono">Strict</td><td class="mono">&#966;_hist</td><td>&#8212;</td>
+              <td class="mono"><span class="sr-chip positive">72.4%</span></td>
+              <td class="mono">142</td><td class="mono">0.81</td><td class="mono">0.23</td>
+            </tr>
+            <tr class="best-row">
+              <td>
+                <span class="strategy-label">Strict + History + Read Reject</span>
+                <span class="badge badge-accent">Our Extension</span>
+              </td>
+              <td class="mono">Strict</td><td class="mono">&#966;_hist</td><td>&#10003;</td>
+              <td class="mono"><span class="sr-chip positive"><strong>76.1%</strong></span></td>
+              <td class="mono">142</td><td class="mono">0.81</td><td class="mono"><strong>0.12</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+
+<div id="loading-overlay" class="loading-overlay" aria-hidden="true" hidden>
+  <div class="loading-inner">
+    <span class="loading-spinner" aria-hidden="true"></span>
+    <span class="loading-text">Executing episode&hellip;</span>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="charts.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
+
+
