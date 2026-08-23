@@ -1,0 +1,84 @@
+{
+  "run_config": {
+    "protocol": "all",
+    "env": "reg_agent",
+    "steps": 1000,
+    "init_mem_size": 100,
+    "capacity": 100,
+    "seed": 42,
+    "output_dir": "results",
+    "backbone": "gpt-4o-mini",
+    "extension": false,
+    "dry_run": true
+  },
+  "protocols_executed": {
+    "A": {
+      "protocol": "A",
+      "status": "dry_run_validated",
+      "configurations": [
+        "Fixed",
+        "Add-All",
+        "Coarse-C1",
+        "Coarse-C2",
+        "Strict"
+      ],
+      "metrics_planned": [
+        "Task_SR",
+        "Memory_Size",
+        "Pearson_r_EF"
+      ],
+      "steps": 1000,
+      "env": "reg_agent"
+    },
+    "B": {
+      "protocol": "B",
+      "status": "dry_run_validated",
+      "configurations": [
+        "Strict_NoDeletion",
+        "Strict_HistoryDeletion",
+        "Strict_CombinedDeletion"
+      ],
+      "metrics_planned": [
+        "KDE_Deleted_Error",
+        "KDE_Retained_Error",
+        "Mean_Utility"
+      ],
+      "steps": 1000,
+      "env": "reg_agent"
+    },
+    "C": {
+      "protocol": "C",
+      "status": "dry_run_validated",
+      "configurations": [
+        "Fixed_Shift",
+        "AddAll_Shift",
+        "Strict_HistoryDel_Shift"
+      ],
+      "metrics_planned": [
+        "Cluster_Recovery_Speed",
+        "Stale_Memory_Eviction_Rate",
+        "SR_by_Cluster"
+      ],
+      "steps": 1000,
+      "env": "reg_agent"
+    },
+    "D": {
+      "protocol": "D",
+      "status": "dry_run_validated",
+      "configurations": [
+        "Unbounded_Strict",
+        "Bounded_Strict_M100"
+      ],
+      "metrics_planned": [
+        "Memory_Bound_Adherence",
+        "Accuracy_Retention_Ratio",
+        "Token_Efficiency"
+      ],
+      "steps": 1000,
+      "capacity": 100,
+      "env": "reg_agent"
+    }
+  },
+  "timestamp": 1787508265.56164,
+  "status": "success"
+}

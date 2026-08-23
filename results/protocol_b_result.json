@@ -1,0 +1,16 @@
+{
+  "protocol": "B",
+  "status": "dry_run_validated",
+  "configurations": [
+    "Strict_NoDeletion",
+    "Strict_HistoryDeletion",
+    "Strict_CombinedDeletion"
+  ],
+  "metrics_planned": [
+    "KDE_Deleted_Error",
+    "KDE_Retained_Error",
+    "Mean_Utility"
+  ],
+  "steps": 1000,
+  "env": "reg_agent"
+}

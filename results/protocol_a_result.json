@@ -1,0 +1,18 @@
+{
+  "protocol": "A",
+  "status": "dry_run_validated",
+  "configurations": [
+    "Fixed",
+    "Add-All",
+    "Coarse-C1",
+    "Coarse-C2",
+    "Strict"
+  ],
+  "metrics_planned": [
+    "Task_SR",
+    "Memory_Size",
+    "Pearson_r_EF"
+  ],
+  "steps": 1000,
+  "env": "reg_agent"
+}

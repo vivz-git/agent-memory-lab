@@ -1,0 +1,16 @@
+{
+  "protocol": "D",
+  "status": "dry_run_validated",
+  "configurations": [
+    "Unbounded_Strict",
+    "Bounded_Strict_M100"
+  ],
+  "metrics_planned": [
+    "Memory_Bound_Adherence",
+    "Accuracy_Retention_Ratio",
+    "Token_Efficiency"
+  ],
+  "steps": 1000,
+  "capacity": 100,
+  "env": "reg_agent"
+}

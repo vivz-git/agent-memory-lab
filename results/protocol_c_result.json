@@ -1,0 +1,16 @@
+{
+  "protocol": "C",
+  "status": "dry_run_validated",
+  "configurations": [
+    "Fixed_Shift",
+    "AddAll_Shift",
+    "Strict_HistoryDel_Shift"
+  ],
+  "metrics_planned": [
+    "Cluster_Recovery_Speed",
+    "Stale_Memory_Eviction_Rate",
+    "SR_by_Cluster"
+  ],
+  "steps": 1000,
+  "env": "reg_agent"
+}
