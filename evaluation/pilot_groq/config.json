@@ -1,0 +1,8 @@
+{
+  "env": "reg_agent",
+  "init_mem_size": 20,
+  "test_stream_size": 30,
+  "seed": 42,
+  "llm_client": "GroqLLMClient",
+  "model": "openai/gpt-oss-120b"
+}

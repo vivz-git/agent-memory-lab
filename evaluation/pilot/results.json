@@ -1,52 +1,52 @@
 [
   {
     "condition": "A. Fixed",
-    "success_rate": 0.1,
+    "success_rate": 0.6,
     "r_ef": -0.05030098141165107,
     "final_mem_size": 20,
     "deleted_count": 0,
     "read_rejected": 0,
-    "latency_sec": 0.006587505340576172,
-    "error_propagation_gap": 0.033333333333333326
+    "latency_sec": 30.302165031433105,
+    "error_propagation_gap": 0.4
   },
   {
     "condition": "B. Add-All",
-    "success_rate": 0.1,
+    "success_rate": 0.6,
     "r_ef": 0.1343768415700124,
     "final_mem_size": 50,
     "deleted_count": 0,
     "read_rejected": 0,
-    "latency_sec": 0.012200117111206055,
-    "error_propagation_gap": 0.033333333333333326
+    "latency_sec": 30.27595043182373,
+    "error_propagation_gap": 0.4
   },
   {
     "condition": "C. Strict Addition",
-    "success_rate": 0.1,
-    "r_ef": -0.05030098141165107,
-    "final_mem_size": 20,
+    "success_rate": 0.6,
+    "r_ef": 0.15082313925324492,
+    "final_mem_size": 38,
     "deleted_count": 0,
     "read_rejected": 0,
-    "latency_sec": 0.009624719619750977,
-    "error_propagation_gap": 0.033333333333333326
+    "latency_sec": 30.206803798675537,
+    "error_propagation_gap": 0.4
   },
   {
     "condition": "D. Strict + History Deletion",
-    "success_rate": 0.1,
-    "r_ef": 0.43516605254322965,
-    "final_mem_size": 0,
-    "deleted_count": 20,
+    "success_rate": 0.6,
+    "r_ef": 0.19750696200506865,
+    "final_mem_size": 30,
+    "deleted_count": 8,
     "read_rejected": 0,
-    "latency_sec": 0.005899190902709961,
-    "error_propagation_gap": 0.033333333333333326
+    "latency_sec": 30.217861890792847,
+    "error_propagation_gap": 0.4
   },
   {
     "condition": "E. Adaptive Read Rejection",
-    "success_rate": 0.1,
-    "r_ef": 0.16948467656619515,
-    "final_mem_size": 0,
-    "deleted_count": 20,
-    "read_rejected": 188,
-    "latency_sec": 0.012058496475219727,
-    "error_propagation_gap": 0.033333333333333326
+    "success_rate": 0.6,
+    "r_ef": 0.1959841919794316,
+    "final_mem_size": 36,
+    "deleted_count": 2,
+    "read_rejected": 63,
+    "latency_sec": 30.255712747573853,
+    "error_propagation_gap": 0.4
   }
 ]

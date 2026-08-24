@@ -1,0 +1,62 @@
+[
+  {
+    "condition": "A. Fixed",
+    "addition_policy": "fixed",
+    "deletion_policy": "none",
+    "use_adaptive_read": false,
+    "success_rate": 0.5333333333333333,
+    "r_ef": -0.11819446886226319,
+    "initial_mem_size": 20,
+    "added_count": 0,
+    "deleted_count": 0,
+    "final_mem_size": 20,
+    "read_rejected": 0,
+    "latency_sec": 262.1843922138214,
+    "error_propagation_gap": 0.4666666666666667
+  },
+  {
+    "condition": "B. Naive Add-All",
+    "addition_policy": "add_all",
+    "deletion_policy": "none",
+    "use_adaptive_read": false,
+    "success_rate": 0.6,
+    "r_ef": -0.6869674562828321,
+    "initial_mem_size": 20,
+    "added_count": 30,
+    "deleted_count": 0,
+    "final_mem_size": 50,
+    "read_rejected": 0,
+    "latency_sec": 162.95492458343506,
+    "error_propagation_gap": 0.4
+  },
+  {
+    "condition": "C. Managed Memory",
+    "addition_policy": "strict",
+    "deletion_policy": "history",
+    "use_adaptive_read": false,
+    "success_rate": 0.6,
+    "r_ef": 0.2042560982979593,
+    "initial_mem_size": 20,
+    "added_count": 18,
+    "deleted_count": 8,
+    "final_mem_size": 30,
+    "read_rejected": 0,
+    "latency_sec": 48.79408383369446,
+    "error_propagation_gap": 0.4
+  },
+  {
+    "condition": "D. Managed + Adaptive Read Rejection",
+    "addition_policy": "strict",
+    "deletion_policy": "history",
+    "use_adaptive_read": true,
+    "success_rate": 0.6,
+    "r_ef": 0.15600664778612794,
+    "initial_mem_size": 20,
+    "added_count": 18,
+    "deleted_count": 2,
+    "final_mem_size": 36,
+    "read_rejected": 63,
+    "latency_sec": 47.58133244514465,
+    "error_propagation_gap": 0.4
+  }
+]

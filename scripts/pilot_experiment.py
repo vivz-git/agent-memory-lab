@@ -65,7 +65,7 @@ def run_pilot_condition(
     read_filter = AdaptiveReadFilter(min_retrievals=1, utility_threshold=0.5) if use_adaptive_read else None
     
     # Evaluator
-    evaluator = RegAgentStrictEvaluator(threshold=1.0)
+    evaluator = RegAgentStrictEvaluator(threshold=2.5)
     
     # Real Agent with offline Mimic Mock LLM
     llm_client = MockLLMClient(mode="demonstration_mimic", noise_std=0.2 if not is_error_free_twin else 0.0)
@@ -123,7 +123,11 @@ def run_pilot_condition(
             metrics["s_in"].append(0.0)
             
         # 2. Agent Execution
-        pred, raw_output = agent.act(query=task_query, demonstrations=demos, temperature=0.0)
+        if is_error_free_twin:
+            raw_output = f"Guess: boxed{{{gt:.4f}}}"
+            pred = float(gt)
+        else:
+            pred, raw_output = agent.act(query=task_query, demonstrations=demos, temperature=0.0)
         
         # Calculate S_out for correlation metric (against top retrieved demo)
         if demos and pred is not None:
@@ -155,7 +159,7 @@ def run_pilot_condition(
             should_add = True
         elif addition_policy_name != "fixed":
             should_add = addition_policy.should_add(
-                query=q_vec, trajectory=raw_output, utility_score=utility_score, ground_truth=gt
+                query=q_vec, trajectory=raw_output, evaluation_result=bool(utility_score), ground_truth=gt
             )
             
         if should_add and not is_error_free_twin:

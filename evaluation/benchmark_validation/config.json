@@ -1,0 +1,15 @@
+{
+  "env": "reg_agent",
+  "llm_provider": "groq",
+  "model": "openai/gpt-oss-120b",
+  "evaluator": "RegAgentStrictEvaluator (threshold=2.5)",
+  "initial_memory_size": 20,
+  "test_stream_size": 30,
+  "seed": 42,
+  "conditions": [
+    "A. Fixed",
+    "B. Naive Add-All",
+    "C. Managed Memory",
+    "D. Managed + Adaptive Read Rejection"
+  ]
+}

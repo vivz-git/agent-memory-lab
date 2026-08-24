@@ -1,0 +1,52 @@
+[
+  {
+    "condition": "A. Fixed",
+    "success_rate": 0.13333333333333333,
+    "r_ef": -0.05314468527404462,
+    "final_mem_size": 20,
+    "deleted_count": 0,
+    "read_rejected": 0,
+    "latency_sec": 30.29238200187683,
+    "error_propagation_gap": 0.0
+  },
+  {
+    "condition": "B. Add-All",
+    "success_rate": 0.13333333333333333,
+    "r_ef": 0.16153887343044207,
+    "final_mem_size": 50,
+    "deleted_count": 0,
+    "read_rejected": 0,
+    "latency_sec": 30.30010414123535,
+    "error_propagation_gap": 0.0
+  },
+  {
+    "condition": "C. Strict Addition",
+    "success_rate": 0.13333333333333333,
+    "r_ef": -0.05314468527404462,
+    "final_mem_size": 20,
+    "deleted_count": 0,
+    "read_rejected": 0,
+    "latency_sec": 30.33170795440674,
+    "error_propagation_gap": 0.0
+  },
+  {
+    "condition": "D. Strict + History Deletion",
+    "success_rate": 0.13333333333333333,
+    "r_ef": 0.44580391895403276,
+    "final_mem_size": 0,
+    "deleted_count": 20,
+    "read_rejected": 0,
+    "latency_sec": 30.266226768493652,
+    "error_propagation_gap": 0.0
+  },
+  {
+    "condition": "E. Adaptive Read Rejection",
+    "success_rate": 0.13333333333333333,
+    "r_ef": 0.14870878191715092,
+    "final_mem_size": 0,
+    "deleted_count": 20,
+    "read_rejected": 210,
+    "latency_sec": 30.211064100265503,
+    "error_propagation_gap": 0.0
+  }
+]
