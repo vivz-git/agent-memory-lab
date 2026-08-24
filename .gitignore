@@ -1,0 +1,5 @@
+.env
+.agents/skills/
+**/__pycache__/
+*.pyc
+patch.py

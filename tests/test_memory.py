@@ -313,6 +313,18 @@ class TestAdditionPolicies:
         assert strict_custom.should_add(query="q", trajectory="VALID_PATH", ground_truth=None) is True
         assert strict_custom.should_add(query="q", trajectory="INVALID_PATH", ground_truth=None) is False
 
+    def test_strict_addition_policy_pilot_wiring_regression(self):
+        # Regression test for pilot configuration where utility_score (0.0 or 1.0)
+        # is mapped to a boolean to properly gate addition.
+        strict_policy = StrictAdditionPolicy()
+        
+        # In pilot, we call: should_add(..., evaluation_result=bool(utility_score))
+        # utility_score = 1.0 -> bool(1.0) -> True (success, add it)
+        assert strict_policy.should_add(query="q", trajectory="t", evaluation_result=bool(1.0)) is True
+        
+        # utility_score = 0.0 -> bool(0.0) -> False (failure, reject it)
+        assert strict_policy.should_add(query="q", trajectory="t", evaluation_result=bool(0.0)) is False
+
     def test_addition_factory(self):
         p1 = create_addition_policy("fixed")
         assert isinstance(p1, FixedAdditionPolicy)

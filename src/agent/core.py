@@ -275,7 +275,7 @@ class GroqLLMClient(BaseLLMClient):
         self,
         prompt: str,
         temperature: float = 0.0,
-        max_tokens: int = 256,
+        max_tokens: int = 1024,
     ) -> str:
         """Call Groq API or fallback to mock."""
         if not self.api_key:
@@ -294,7 +294,10 @@ class GroqLLMClient(BaseLLMClient):
                 temperature=temperature,
                 max_tokens=max_tokens,
             )
-            return response.choices[0].message.content or ""
+            content = response.choices[0].message.content or ""
+            if not content:
+                content = getattr(response.choices[0].message, "reasoning", "") or ""
+            return content
         except Exception:
             if self.fallback_to_mock:
                 return self._mock_client.complete(
