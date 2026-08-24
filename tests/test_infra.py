@@ -128,8 +128,11 @@ class TestEnvironmentAndCI:
             content = f.read()
 
         required_vars = [
+            "LLM_PROVIDER",
             "OPENAI_API_KEY",
-            "MODEL_BACKBONE",
+            "OPENAI_MODEL",
+            "GROQ_API_KEY",
+            "GROQ_MODEL",
             "LOG_LEVEL",
             "RESULTS_DIR",
             "RANDOM_SEED",

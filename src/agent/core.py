@@ -257,6 +257,66 @@ class OpenAILLMClient(BaseLLMClient):
                 )
             raise
 
+class GroqLLMClient(BaseLLMClient):
+    """Groq API LLM client with automatic graceful fallback to mock."""
+
+    def __init__(
+        self,
+        model: str = "openai/gpt-oss-120b",
+        api_key: Optional[str] = None,
+        fallback_to_mock: bool = True,
+    ) -> None:
+        self.model = model
+        self.api_key = api_key or os.getenv("GROQ_API_KEY")
+        self.fallback_to_mock = fallback_to_mock
+        self._mock_client = MockLLMClient(mode="rule_based")
+
+    def complete(
+        self,
+        prompt: str,
+        temperature: float = 0.0,
+        max_tokens: int = 256,
+    ) -> str:
+        """Call Groq API or fallback to mock."""
+        if not self.api_key:
+            if self.fallback_to_mock:
+                return self._mock_client.complete(
+                    prompt, temperature=temperature, max_tokens=max_tokens
+                )
+            raise ValueError("GROQ_API_KEY not configured and fallback_to_mock is False.")
+
+        try:
+            import groq
+            client = groq.Groq(api_key=self.api_key)
+            response = client.chat.completions.create(
+                model=self.model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=temperature,
+                max_tokens=max_tokens,
+            )
+            return response.choices[0].message.content or ""
+        except Exception:
+            if self.fallback_to_mock:
+                return self._mock_client.complete(
+                    prompt, temperature=temperature, max_tokens=max_tokens
+                )
+            raise
+
+def get_llm_client() -> BaseLLMClient:
+    """Factory to return the configured LLM Client."""
+    provider = os.getenv("LLM_PROVIDER", "openai").lower()
+    
+    if provider == "groq":
+        return GroqLLMClient(
+            model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"),
+            api_key=os.getenv("GROQ_API_KEY")
+        )
+    else:
+        return OpenAILLMClient(
+            model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
+            api_key=os.getenv("OPENAI_API_KEY")
+        )
+
 
 class BaseAgent(ABC):
     """Abstract Base Agent executing queries with retrieved demonstrations."""
