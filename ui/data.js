@@ -1,4 +1,4 @@
-﻿/**
+/**
  * data.js — Mock / demo state data for the Agent Memory Lab UI.
  * Structured to mirror the real backend interfaces in src/memory/schema.py
  * and src/evaluation/runner.py so integration is a drop-in replacement.
@@ -161,35 +161,30 @@ window.CHART_DATA = (() => {
   const T = 50; // Display T=500 steps, sampled at interval of 10 → 50 points
   const steps = Array.from({ length: T }, (_, i) => (i + 1) * 10);
 
-  function smoothSeries(base, noise, drift) {
+  function smoothSeries(base, noise) {
     const out = [];
-    let v = base;
     for (let i = 0; i < T; i++) {
-      v = Math.max(0.05, Math.min(0.99, v + (Math.random() - 0.5) * noise + drift));
+      let v = base + (Math.random() - 0.5) * noise;
       out.push(Math.round(v * 1000) / 1000);
     }
     return out;
   }
 
-  // Task Success Rate
-  const srFixed      = smoothSeries(0.62, 0.04, 0.0001);
-  const srAddAll     = smoothSeries(0.65, 0.06, -0.0015); // degrades
-  const srStrict     = smoothSeries(0.65, 0.03,  0.0005);
-  const srStrictRead = smoothSeries(0.65, 0.025, 0.0007);
+  // Task Success Rate (Plateaed around 53%)
+  const srFixed      = smoothSeries(0.53, 0.01);
+  const srAddAll     = smoothSeries(0.525, 0.01);
+  const srStrict     = smoothSeries(0.525, 0.01);
+  const srStrictRead = smoothSeries(0.525, 0.01);
 
   // Memory Size
-  const memFixed      = Array(T).fill(100);
-  const memAddAll     = Array.from({ length: T }, (_, i) => Math.round(100 + i * 11));
-  const memStrict     = Array.from({ length: T }, (_, i) => Math.min(100 + Math.round(i * 0.9), 150));
-  const memStrictRead = memStrict.slice();
+  const memFixed      = Array(T).fill(20);
+  const memAddAll     = Array.from({ length: T }, (_, i) => Math.round(20 + i * 2)); // 20 -> 120
+  const memStrict     = Array.from({ length: T }, (_, i) => Math.min(20 + Math.round(i * 0.2), 30.5)); // 20 -> 30
+  const memStrictRead = Array.from({ length: T }, (_, i) => Math.min(20 + Math.round(i * 0.6), 50.5)); // 20 -> 50
 
-  // Error Propagation Gap Δ_EP
-  const epHist = Array.from({ length: T }, (_, i) => {
-    const peak = Math.min(i / 8, 1);
-    const decay = Math.max(0, (i - 12) / 30);
-    return Math.round(Math.max(0.02, 0.35 * peak - decay * 0.18 + (Math.random() - 0.5) * 0.03) * 1000) / 1000;
-  });
-  const epHistRead = epHist.map(v => Math.round(Math.max(0.01, v * 0.52 + (Math.random() - 0.5) * 0.015) * 1000) / 1000);
+  // Error Propagation Gap Δ_EP (Flat at ~47.5%)
+  const epHist = smoothSeries(0.475, 0.01);
+  const epHistRead = smoothSeries(0.475, 0.01);
 
   return {
     steps,

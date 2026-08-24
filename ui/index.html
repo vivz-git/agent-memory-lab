@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
@@ -306,23 +306,23 @@
     <div class="kpi-strip" role="region" aria-label="Key performance indicators">
       <div class="kpi-card">
         <span class="kpi-label">Task Success Rate</span>
-        <span class="kpi-value">76.1%</span>
-        <span class="kpi-delta positive">+11.8pp vs Add-All</span>
-      </div>
-      <div class="kpi-card">
-        <span class="kpi-label">r_EF (Pearson)</span>
-        <span class="kpi-value">0.81</span>
-        <span class="kpi-delta neutral">Experience-Following</span>
+        <span class="kpi-value">~53%</span>
+        <span class="kpi-delta neutral">Comparable across all conditions</span>
       </div>
       <div class="kpi-card">
         <span class="kpi-label">Memory Size</span>
-        <span class="kpi-value">142</span>
-        <span class="kpi-delta neutral">records (bounded)</span>
+        <span class="kpi-value">30.5</span>
+        <span class="kpi-delta positive">~75% reduction (120 &rarr; 30.5)</span>
       </div>
       <div class="kpi-card">
-        <span class="kpi-label">&#916;_EP Gap</span>
-        <span class="kpi-value">0.12</span>
-        <span class="kpi-delta positive">&#8722;0.11 with Read Reject</span>
+        <span class="kpi-label">Read Rejections</span>
+        <span class="kpi-value">418</span>
+        <span class="kpi-delta positive">on average across 2 seeds</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Δ_EP Gap</span>
+        <span class="kpi-value">~47.5%</span>
+        <span class="kpi-delta neutral">Stable across conditions</span>
       </div>
     </div>
 
@@ -373,15 +373,14 @@
         </table>
       </div>
       <p class="chart-caption">
-        Adaptive Read Rejection dampens the &#916;_EP spike before the history-deletion threshold <em>n</em> is reached,
-        reducing toxic context pollution while the memory bank self-heals via utility-based eviction.
+        <strong>Note:</strong> In this specific benchmark, Error Propagation (&#916;_EP) remained relatively flat at ~47.5% across all conditions. The baseline zero-shot math errors of the chosen LLM overpowered cascading logic errors, meaning memory management did not significantly alter the error propagation profile here.
       </p>
     </div>
 
     <div class="card" id="card-baselines">
       <header class="card-header">
-        <h2 class="card-title">Baseline Strategy Comparison</h2>
-        <span class="badge badge-muted">RegAgent &middot; 5 seeds &middot; T=500</span>
+        <h2 class="card-title">Secondary Research Metric & Baseline Comparison</h2>
+        <span class="badge badge-muted">RegAgent &middot; 2 seeds &middot; Groq</span>
       </header>
       <div class="table-wrap" role="region" aria-label="Baseline comparison table" tabindex="0">
         <table class="baseline-table">
@@ -391,49 +390,46 @@
               <th scope="col">Addition &#960;</th>
               <th scope="col">Deletion &#966;</th>
               <th scope="col">Read Filter</th>
-              <th scope="col">Final SR &#8593;</th>
+              <th scope="col">Final SR</th>
               <th scope="col">Mem Size</th>
               <th scope="col">r_EF</th>
-              <th scope="col">&#916;_EP &#8595;</th>
+              <th scope="col">&#916;_EP</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td><span class="strategy-label">Fixed (No-Memory Baseline)</span></td>
+              <td><span class="strategy-label">Fixed (No-Memory)</span></td>
               <td class="mono">&#960;=0</td><td class="mono">&#8212;</td><td>&#8212;</td>
-              <td class="mono"><span class="sr-chip neutral">64.3%</span></td>
-              <td class="mono">100</td><td class="mono">0.12</td><td class="mono">&#8212;</td>
+              <td class="mono"><span class="sr-chip neutral">53.0%</span></td>
+              <td class="mono">20.0</td><td class="mono">-0.07</td><td class="mono">47.0%</td>
             </tr>
             <tr>
-              <td><span class="strategy-label">Add-All (Error Propagation)</span></td>
+              <td><span class="strategy-label">Naive Add-All</span></td>
               <td class="mono">&#960;=1</td><td class="mono">&#966;=0</td><td>&#8212;</td>
-              <td class="mono"><span class="sr-chip negative">51.7%</span></td>
-              <td class="mono">600+</td><td class="mono">0.93</td><td class="mono">0.41</td>
+              <td class="mono"><span class="sr-chip neutral">52.5%</span></td>
+              <td class="mono">120.0</td><td class="mono">0.23</td><td class="mono">47.5%</td>
             </tr>
             <tr>
-              <td><span class="strategy-label">Coarse Addition Only</span></td>
-              <td class="mono">Coarse</td><td class="mono">&#966;=0</td><td>&#8212;</td>
-              <td class="mono"><span class="sr-chip neutral">68.9%</span></td>
-              <td class="mono">312</td><td class="mono">0.74</td><td class="mono">0.28</td>
-            </tr>
-            <tr>
-              <td><span class="strategy-label">Strict + History Deletion</span></td>
+              <td><span class="strategy-label">Managed Memory</span></td>
               <td class="mono">Strict</td><td class="mono">&#966;_hist</td><td>&#8212;</td>
-              <td class="mono"><span class="sr-chip positive">72.4%</span></td>
-              <td class="mono">142</td><td class="mono">0.81</td><td class="mono">0.23</td>
+              <td class="mono"><span class="sr-chip neutral">52.5%</span></td>
+              <td class="mono">30.5</td><td class="mono">0.10</td><td class="mono">47.5%</td>
             </tr>
             <tr class="best-row">
               <td>
-                <span class="strategy-label">Strict + History + Read Reject</span>
+                <span class="strategy-label">Managed + ARR</span>
                 <span class="badge badge-accent">Our Extension</span>
               </td>
               <td class="mono">Strict</td><td class="mono">&#966;_hist</td><td>&#10003;</td>
-              <td class="mono"><span class="sr-chip positive"><strong>76.1%</strong></span></td>
-              <td class="mono">142</td><td class="mono">0.81</td><td class="mono"><strong>0.12</strong></td>
+              <td class="mono"><span class="sr-chip neutral">52.5%</span></td>
+              <td class="mono">50.5</td><td class="mono">0.13</td><td class="mono">47.5%</td>
             </tr>
           </tbody>
         </table>
       </div>
+      <p class="chart-caption" style="margin-top: 1rem;">
+        <strong>Adaptive Read Rejection (ARR)</strong> successfully blocked 418 low-utility context retrievals on average across two benchmark seeds, acting as an efficiency/safety filter. It did not improve Success Rate in this benchmark.
+      </p>
     </div>
   </section>
 

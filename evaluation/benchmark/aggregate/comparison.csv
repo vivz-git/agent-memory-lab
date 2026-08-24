@@ -1,0 +1,5 @@
+Condition,SR_Mean,SR_Std,r_EF_Mean,r_EF_Std,Delta_EP_Mean,Delta_EP_Std,Final_Mem_Mean,Final_Mem_Std,Added_Mean,Deleted_Mean,Read_Rejected_Mean,Latency_Mean_Sec
+A. Fixed,53.00%,5.00%,-0.0773,0.0859,47.00%,5.00%,20.0,0.0,0.0,0.0,0.0,133.4
+B. Naive Add-All,52.50%,5.50%,0.2288,0.0196,47.50%,5.50%,120.0,0.0,100.0,0.0,0.0,130.0
+C. Managed Memory,52.50%,5.50%,0.1030,0.1275,47.50%,5.50%,30.5,16.5,52.5,42.0,0.0,130.4
+D. Managed + Adaptive Read Rejection,52.50%,5.50%,0.0377,0.1773,47.50%,5.50%,50.5,9.5,52.5,22.0,418.0,160.9
